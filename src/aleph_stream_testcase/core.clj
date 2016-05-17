@@ -21,6 +21,15 @@
        :body (with-open [in (-> "test.png" io/resource io/input-stream)]
                (streams/to-byte-array in))}
 
+      "/proxy"
+      (let [{:keys [body]} @(http/get "http://google.com"
+                                      {:connection-timeout 1000
+                                       :request-timeout    1000})]
+        {:status 200
+         :body (when body
+                 (with-open [in body]
+                   (slurp in)))})
+
       {:status 404})
     (catch Throwable t
       (locking *out*
