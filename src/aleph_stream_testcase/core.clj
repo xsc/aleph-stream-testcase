@@ -24,7 +24,8 @@
       {:status 404})
     (catch Throwable t
       (locking *out*
-        (println "[error]" uri " -> " (.getMessage t))))))
+        (println "[error]" uri " -> " (.getMessage t)))
+      {:status 500})))
 
 (defn -main
   [& [executor]]
