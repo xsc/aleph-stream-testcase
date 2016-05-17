@@ -34,7 +34,10 @@
     (catch Throwable t
       (locking *out*
         (println "[error]" uri " -> " (.getMessage t)))
-      {:status 500})))
+      {:status 500})
+    (finally
+      (locking *out*
+        (println "[request done]" (System/currentTimeMillis) request)))))
 
 (defn -main
   [& [executor]]
