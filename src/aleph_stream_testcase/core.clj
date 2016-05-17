@@ -6,7 +6,7 @@
 (defn handler
   [{:keys [uri] :as request}]
   (locking *out*
-    (println "[request]" request))
+    (println "[request]" (System/currentTimeMillis) request))
   (try
     (case uri
       "/stream"
