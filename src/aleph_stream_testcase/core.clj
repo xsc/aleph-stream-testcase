@@ -1,5 +1,6 @@
 (ns aleph-stream-testcase.core
   (:require [aleph.http :as http]
+            [aleph.flow :as flow]
             [byte-streams :as streams]
             [clojure.java.io :as io]))
 
@@ -26,7 +27,12 @@
         (println "[error]" uri " -> " (.getMessage t))))))
 
 (defn -main
-  [& args]
-  (with-open [server (http/start-server #'handler {:port 9877})]
+  [& [executor]]
+  (with-open [server (http/start-server
+                       #'handler
+                       (merge
+                         {:port 9877}
+                         (when (= executor "fixed-thread")
+                           {:executor (flow/fixed-thread-executor 4)})))]
     (println "server is running ...")
     @(promise)))
